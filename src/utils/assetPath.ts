@@ -2,6 +2,8 @@
  * Utility functions for handling asset paths
  */
 
+import { basePath, baseDomain } from './env';
+
 /**
  * Get asset path with the base path prefix (if in production)
  * 
@@ -9,14 +11,21 @@
  * @returns The asset path with base path prefix if needed
  */
 export function getAssetPath(path: string): string {
-  // Only add the base path in production
-  const basePath = process.env.NODE_ENV === 'production' 
-    ? '/farmers-market-directory' 
-    : '';
+  // If basePath is empty (development), just ensure it starts with a slash
+  if (!basePath) {
+    return path.startsWith('/') ? path : `/${path}`;
+  }
+  
+  // Check if the path already contains the basePath anywhere
+  if (path.includes(basePath) || path.includes(basePath.slice(1))) {
+    // Already has the base path, return the path as is
+    return path.startsWith('/') ? path : `/${path}`;
+  }
   
   // Ensure path starts with a slash
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   
+  // Add the base path
   return `${basePath}${normalizedPath}`;
 }
 
@@ -41,10 +50,5 @@ export function getImagePath(path: string): string {
  * @returns The full URL to the image
  */
 export function getFullImageUrl(path: string): string {
-  const isDev = process.env.NODE_ENV !== 'production';
-  const baseDomain = isDev 
-    ? 'http://localhost:3000' 
-    : 'https://dbidmead.github.io';
-  
   return `${baseDomain}${getAssetPath(path)}`;
 } 

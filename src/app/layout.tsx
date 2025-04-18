@@ -1,6 +1,7 @@
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { getAssetPath } from "../utils/assetPath";
+import StaticImage from "../components/StaticImage";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const montserrat = Montserrat({ subsets: ["latin"], variable: '--font-montserrat' });
@@ -25,7 +26,11 @@ export default function RootLayout({
         <header className="bg-gradient-to-r from-accent-greens via-accent-greens/60 to-transparent text-white shadow-lg">
           <div className="container mx-auto flex justify-between items-center py-4 px-4 md:px-8">
             <a href={getAssetPath("/")} className="text-xl md:text-2xl font-bold text-white font-montserrat flex items-center">
-              <img src={getAssetPath("/farm-basket-logo.svg")} alt="Farmers Market Basket" className="h-8 md:h-10 mr-2" />
+              <StaticImage 
+                src="/farm-basket-logo.svg" 
+                alt="Farmers Market Basket" 
+                className="h-8 md:h-10 mr-2" 
+              />
               <span className="text-amber-200 mr-1">Find my</span> Farmers Market
             </a>
             <nav>

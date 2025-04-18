@@ -1,4 +1,4 @@
-# Farmers Market Directory
+# Find My Farmers Market
 
 A web application to help users find farmers markets near them using the USDA Farmers Market API.
 
@@ -28,8 +28,8 @@ A web application to help users find farmers markets near them using the USDA Fa
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/farmers-market-directory.git
-cd farmers-market-directory
+git clone https://github.com/yourusername/find-my-farmers-market.git
+cd find-my-farmers-market
 ```
 
 2. Install dependencies
@@ -48,6 +48,20 @@ npm run dev
 ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## API Configuration
+
+The application uses the USDA Farmers Market API to fetch market data. The API key is configured in the environment variables:
+
+- For development: Set the API key in `.env.local` or `.env.development`
+- For production: Set the API key in `.env.production`
+
+API requests are formatted as:
+```
+https://www.usdalocalfoodportal.com/api/farmersmarket/?apikey=YOUR_API_KEY&zip=ZIP_CODE&radius=RADIUS
+```
+
+The API key is kept private in the codebase and only exposed to the client as needed for API requests.
 
 ## Development
 

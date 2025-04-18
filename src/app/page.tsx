@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import CustomImage from '../components/Image';
 import { SearchParams } from '../types';
 import { getAssetPath } from '../utils/assetPath';
 
@@ -32,7 +32,7 @@ export default function Home() {
       <div className="relative h-[75vh] min-h-[600px] w-full">
         {/* Background Image - Artisan Sourdough Bread */}
         <div className="absolute inset-0">
-          <Image 
+          <CustomImage 
             src={getAssetPath("/images/artisan-sourdough-hero.jpg")}
             alt="Rustic artisan sourdough bread"
             fill
@@ -192,7 +192,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <div className="card overflow-hidden hover:shadow-lg transition-shadow">
               <div className="h-48 relative">
-                <Image
+                <CustomImage
                   src={getAssetPath("/images/farmers-market.jpg")}
                   alt="Western farmers market with beautiful produce"
                   fill
@@ -212,7 +212,7 @@ export default function Home() {
             
             <div className="card overflow-hidden hover:shadow-lg transition-shadow">
               <div className="h-48 relative">
-                <Image
+                <CustomImage
                   src={getAssetPath("/images/organic-produce.jpg")}
                   alt="Midwest farmers market with colorful fresh vegetables"
                   fill
@@ -232,7 +232,7 @@ export default function Home() {
             
             <div className="card overflow-hidden hover:shadow-lg transition-shadow">
               <div className="h-48 relative">
-                <Image
+                <CustomImage
                   src={getAssetPath("/images/southern-produce.jpg")}
                   alt="Southern farmers market with regional specialties"
                   fill
@@ -252,7 +252,7 @@ export default function Home() {
             
             <div className="card overflow-hidden hover:shadow-lg transition-shadow">
               <div className="h-48 relative">
-                <Image
+                <CustomImage
                   src={getAssetPath("/images/farmers-market-2.jpg")}
                   alt="Eastern farmers market with seasonal produce"
                   fill
@@ -319,7 +319,7 @@ export default function Home() {
               
               <div className="md:w-1/2 order-1 md:order-2">
                 <div className="relative rounded-lg overflow-hidden shadow-xl">
-                  <Image 
+                  <CustomImage 
                     src={getAssetPath("/images/crop-field.jpg")} 
                     alt="Scenic view of a local crop field at sunset"
                     width={600}

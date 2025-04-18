@@ -1,15 +1,15 @@
 {
-  "name": "farmers-market-directory",
+  "name": "find-my-farmers-market",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://dbidmead.github.io/farmers-market-directory/",
+  "homepage": "https://dbidmead.github.io/find-my-farmers-market/",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && touch out/.nojekyll",
     "start": "next start",
     "lint": "next lint",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d out"
+    "deploy": "gh-pages -d out --dotfiles"
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
