@@ -3,13 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FarmersMarket } from '../../../types';
 import { getMarketDetails } from '../../../services/marketsService';
 
 export default function MarketDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const [market, setMarket] = useState<FarmersMarket | null>(null);
+  const [market, setMarket] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +24,9 @@ export default function MarketDetailPage() {
 
       try {
         setLoading(true);
+        console.log('Fetching market with ID:', marketId);
         const result = await getMarketDetails(marketId);
+        console.log('Market details result:', result);
         setMarket(result);
         setError(null);
       } catch (err) {
@@ -41,6 +42,49 @@ export default function MarketDetailPage() {
 
   const handleBack = () => {
     router.back();
+  };
+
+  // Helper functions to extract data from various API response formats
+  const getMarketName = () => {
+    if (!market) return '';
+    if (typeof market === 'string') return 'Farmers Market';
+    
+    if (market.marketname) return market.marketname;
+    if (market.MarketName) return market.MarketName;
+    
+    return 'Farmers Market Details';
+  };
+
+  const getAddress = () => {
+    if (!market) return [];
+    
+    const parts = [];
+    
+    if (market.Address) parts.push(market.Address);
+    if (market.street) parts.push(market.street);
+    
+    let cityStateZip = '';
+    if (market.city || market.City) cityStateZip += (market.city || market.City);
+    if ((market.state || market.State) && cityStateZip) cityStateZip += `, ${market.state || market.State}`;
+    else if (market.state || market.State) cityStateZip += (market.state || market.State);
+    if (market.zip || market.Zip) cityStateZip += ` ${market.zip || market.Zip}`;
+    
+    if (cityStateZip) parts.push(cityStateZip);
+    
+    return parts;
+  };
+
+  const getSchedule = () => {
+    if (!market) return null;
+    
+    if (market.Schedule) return market.Schedule;
+    if (market.season1date) {
+      let schedule = `Season 1: ${market.season1date}`;
+      if (market.season1time) schedule += ` - ${market.season1time}`;
+      return schedule;
+    }
+    
+    return null;
   };
 
   return (
@@ -67,104 +111,87 @@ export default function MarketDetailPage() {
           </div>
         ) : (
           <div className="bg-white rounded-lg shadow-md overflow-hidden p-6">
-            <h1 className="text-3xl font-bold mb-4">{market.marketname}</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-800">{getMarketName()}</h1>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              {/* Address */}
               <div>
-                <h2 className="text-xl font-semibold mb-3">Location</h2>
-                <div className="space-y-2">
-                  {market.street && <p>{market.street}</p>}
-                  {market.city && market.state && market.zip && (
-                    <p>{market.city}, {market.state} {market.zip}</p>
-                  )}
-                  {(market.lat && market.lon) && (
-                    <div className="mt-4">
-                      <a
-                        href={`https://maps.google.com/?q=${market.lat},${market.lon}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-blue-600 text-white py-2 px-4 rounded-md
-                                  hover:bg-blue-700 focus:outline-none focus:ring-2
-                                  focus:ring-blue-500 focus:ring-offset-2 inline-block"
-                      >
-                        View on Google Maps
-                      </a>
-                    </div>
-                  )}
-                </div>
+                <h2 className="text-xl font-semibold mb-3 text-gray-800">Location</h2>
+                {getAddress().length > 0 ? (
+                  <div className="space-y-1">
+                    {getAddress().map((line, i) => (
+                      <p key={i} className="text-gray-700">{line}</p>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 italic">Address not available</p>
+                )}
+                
+                {/* Map link if coordinates available */}
+                {((market.lat && market.lon) || (market.Latitude && market.Longitude)) && (
+                  <a 
+                    href={`https://maps.google.com/?q=${market.lat || market.Latitude},${market.lon || market.Longitude}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                  >
+                    View on Google Maps
+                  </a>
+                )}
               </div>
               
+              {/* Schedule */}
               <div>
-                <h2 className="text-xl font-semibold mb-3">Hours</h2>
-                <div className="space-y-2">
-                  {market.season1date && (
-                    <div>
-                      <p className="font-medium">Season 1</p>
-                      <p>{market.season1date}</p>
-                      <p>{market.season1time}</p>
-                    </div>
-                  )}
-                  {market.season2date && (
-                    <div className="mt-3">
-                      <p className="font-medium">Season 2</p>
-                      <p>{market.season2date}</p>
-                      <p>{market.season2time}</p>
-                    </div>
-                  )}
-                </div>
+                <h2 className="text-xl font-semibold mb-3 text-gray-800">Hours</h2>
+                {getSchedule() ? (
+                  <p className="text-gray-700">{getSchedule()}</p>
+                ) : (
+                  <p className="text-gray-500 italic">Hours not available</p>
+                )}
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h2 className="text-xl font-semibold mb-3">Payment Options</h2>
-                <ul className="list-disc list-inside space-y-1">
-                  {market.credit === "Y" && <li>Credit Cards</li>}
-                  {market.wic === "Y" && <li>WIC Accepted</li>}
-                  {market.wiccash === "Y" && <li>WIC Cash Accepted</li>}
-                  {market.sfmnp === "Y" && <li>Senior Farmers Market Nutrition Program</li>}
-                  {market.snap === "Y" && <li>SNAP Accepted</li>}
-                </ul>
+            {/* Products if available */}
+            {market.Products && (
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-3 text-gray-800">Products</h2>
+                <p className="text-gray-700">{market.Products}</p>
               </div>
-              
-              <div>
-                <h2 className="text-xl font-semibold mb-3">Products</h2>
-                <div className="grid grid-cols-2 gap-x-6 gap-y-1">
-                  {market.bakedgoods === "Y" && <p>Baked Goods</p>}
-                  {market.cheese === "Y" && <p>Cheese</p>}
-                  {market.crafts === "Y" && <p>Crafts</p>}
-                  {market.flowers === "Y" && <p>Flowers</p>}
-                  {market.eggs === "Y" && <p>Eggs</p>}
-                  {market.seafood === "Y" && <p>Seafood</p>}
-                  {market.herbs === "Y" && <p>Herbs</p>}
-                  {market.vegetables === "Y" && <p>Vegetables</p>}
-                  {market.honey === "Y" && <p>Honey</p>}
-                  {market.jams === "Y" && <p>Jams</p>}
-                  {market.maple === "Y" && <p>Maple</p>}
-                  {market.meat === "Y" && <p>Meat</p>}
-                  {market.nuts === "Y" && <p>Nuts</p>}
-                  {market.plants === "Y" && <p>Plants</p>}
-                  {market.poultry === "Y" && <p>Poultry</p>}
-                  {market.prepared === "Y" && <p>Prepared Food</p>}
-                  {market.soap === "Y" && <p>Soap</p>}
-                  {market.trees === "Y" && <p>Trees</p>}
-                  {market.wine === "Y" && <p>Wine</p>}
-                </div>
-              </div>
-            </div>
+            )}
             
-            {market.website && (
-              <div className="mt-8">
-                <a
-                  href={market.website}
-                  target="_blank"
+            {/* Website if available */}
+            {(market.Website || market.website) && (
+              <div className="mb-8">
+                <h2 className="text-xl font-semibold mb-3 text-gray-800">Website</h2>
+                <a 
+                  href={market.Website || market.website} 
+                  target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-green-600 hover:text-green-800 font-medium"
+                  className="text-green-600 hover:text-green-800"
                 >
-                  Visit Website →
+                  {market.Website || market.website}
                 </a>
               </div>
             )}
+            
+            {/* Raw data for debugging */}
+            <details className="mt-8 border border-gray-200 rounded-md p-4">
+              <summary className="text-gray-600 cursor-pointer font-semibold">Raw Market Data</summary>
+              <pre className="bg-gray-100 p-4 rounded overflow-auto text-xs mt-4">
+                {JSON.stringify(market, null, 2)}
+              </pre>
+            </details>
+            
+            <div className="mt-8">
+              <button
+                onClick={handleBack}
+                className="bg-green-600 text-white py-2 px-4 rounded-md
+                         hover:bg-green-700 focus:outline-none focus:ring-2
+                         focus:ring-green-500 focus:ring-offset-2"
+              >
+                Back to Markets
+              </button>
+            </div>
           </div>
         )}
       </div>

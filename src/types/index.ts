@@ -1,14 +1,26 @@
 export interface FarmersMarket {
   id: string;
-  marketname: string;
+  marketname?: string;
+  MarketName?: string;
   website?: string;
+  Website?: string;
   street?: string;
+  Address?: string;
   city?: string;
+  City?: string;
   county?: string;
+  County?: string;
   state?: string;
+  State?: string;
   zip?: string;
+  Zip?: string;
   lat?: number;
   lon?: number;
+  Latitude?: number;
+  Longitude?: number;
+  distance?: number;
+  Schedule?: string;
+  Products?: string;
   season1date?: string;
   season1time?: string;
   season2date?: string;
@@ -55,4 +67,11 @@ export interface SearchParams {
 export interface ApiResponse {
   results: FarmersMarket[];
   count: number;
+}
+
+// Additional interface for the actual API response structure
+export interface USDAMarketListItem {
+  id: string;
+  marketname: string;
+  distance?: number;
 } 

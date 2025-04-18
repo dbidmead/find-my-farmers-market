@@ -1,42 +1,51 @@
 import { FarmersMarket, SearchParams, ApiResponse } from '../types';
 
-const API_KEY = process.env.NEXT_PUBLIC_USDA_API_KEY;
-const API_BASE_URL = 'https://search.ams.usda.gov/farmersmarkets/v1/data.svc';
-
 /**
  * Searches for farmers markets based on location parameters
  */
 export async function searchMarkets(params: SearchParams): Promise<FarmersMarket[]> {
   try {
-    let endpoint = '';
+    console.log('Searching with params:', params);
     
-    // Determine which endpoint to use based on provided parameters
+    // Build the URL to our local API endpoint
+    let endpoint = '/api/markets';
+    
+    // Add query parameters
+    const queryParams = new URLSearchParams();
+    
     if (params.zip) {
-      endpoint = `${API_BASE_URL}/zipSearch?zip=${params.zip}`;
+      queryParams.append('zip', params.zip);
     } else if (params.lat && params.lng) {
-      endpoint = `${API_BASE_URL}/locSearch?lat=${params.lat}&lng=${params.lng}`;
-    } else {
-      throw new Error('Either zip code or latitude/longitude must be provided');
+      queryParams.append('lat', params.lat.toString());
+      queryParams.append('lng', params.lng.toString());
     }
-
-    // Add API key if available
-    if (API_KEY) {
-      endpoint += `&apikey=${API_KEY}`;
-    }
-
-    // Add radius if provided
+    
     if (params.radius) {
-      endpoint += `&radius=${params.radius}`;
+      queryParams.append('radius', params.radius.toString());
     }
+    
+    // Add query string to endpoint
+    endpoint += `?${queryParams.toString()}`;
 
+    console.log('Fetching from endpoint:', endpoint);
     const response = await fetch(endpoint);
     
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
     }
 
-    const data = await response.json() as ApiResponse;
-    return data.results || [];
+    const data = await response.json();
+    console.log('API Response:', data);
+    
+    // Handle various response formats
+    if (data && data.results) {
+      return data.results;
+    } else if (data && Array.isArray(data)) {
+      return data;
+    } else {
+      console.error('Unexpected API response structure:', data);
+      return [];
+    }
   } catch (error) {
     console.error('Error searching markets:', error);
     throw error;
@@ -48,13 +57,12 @@ export async function searchMarkets(params: SearchParams): Promise<FarmersMarket
  */
 export async function getMarketDetails(marketId: string): Promise<FarmersMarket | null> {
   try {
-    let endpoint = `${API_BASE_URL}/mktDetail?id=${marketId}`;
+    console.log('Getting details for market ID:', marketId);
     
-    // Add API key if available
-    if (API_KEY) {
-      endpoint += `&apikey=${API_KEY}`;
-    }
+    // Use our local API endpoint
+    const endpoint = `/api/markets/${marketId}`;
 
+    console.log('Fetching from endpoint:', endpoint);
     const response = await fetch(endpoint);
     
     if (!response.ok) {
@@ -62,7 +70,9 @@ export async function getMarketDetails(marketId: string): Promise<FarmersMarket 
     }
 
     const data = await response.json();
-    return data.marketdetails || null;
+    console.log('Market details response:', data);
+    
+    return data || null;
   } catch (error) {
     console.error('Error getting market details:', error);
     throw error;
