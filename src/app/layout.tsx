@@ -2,9 +2,6 @@ import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { getAssetPath } from "../utils/assetPath";
 
-// Ensure the CSS is properly loaded in production
-import "../styles/main.css";
-
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const montserrat = Montserrat({ subsets: ["latin"], variable: '--font-montserrat' });
 

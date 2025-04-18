@@ -4,17 +4,12 @@
   "private": true,
   "homepage": "https://dbidmead.github.io/farmers-market-directory/",
   "scripts": {
-    "dev": "npm run clean:dev && NODE_ENV=development next dev -p 3000",
-    "dev:clean": "rm -rf .next && rm -rf node_modules/.cache && NODE_ENV=development next dev -p 3000",
-    "build": "NODE_ENV=production next build && npm run copy-images && node scripts/post-build-css.js && node scripts/fix-chunk-paths.js",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "clean": "rm -rf .next out node_modules/.cache",
-    "clean:dev": "rm -rf .next node_modules/.cache",
-    "clean:all": "rm -rf .next out node_modules/.cache && npm install && NODE_ENV=production next build",
-    "copy-images": "node scripts/copy-images.js",
-    "proxy": "nodemon server/server.js",
-    "deploy": "node deploy-gh-pages.js"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out"
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
@@ -23,20 +18,20 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "next": "^13.5.6",
-    "nodemon": "^3.1.9",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwindcss": "^3.4.17",
-    "postcss": "^8.5.3",
-    "autoprefixer": "^10.4.21"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^18.16.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.21",
     "eslint": "^8.46.0",
     "eslint-config-next": "^13.5.6",
+    "gh-pages": "^6.3.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
     "typescript": "^5.0.4"
   }
 }
