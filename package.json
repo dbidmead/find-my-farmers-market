@@ -2,12 +2,15 @@
   "name": "farmers-market-directory",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://dbidmead.github.io/find-my-farmers-market/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "proxy": "nodemon server/server.js"
+    "proxy": "nodemon server/server.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
