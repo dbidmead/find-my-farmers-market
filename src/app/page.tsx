@@ -21,7 +21,9 @@ export default function Home() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = `/markets?zip=${searchParams.zip}&radius=${searchParams.radius}`;
+    // Use full path with basePath for GitHub Pages
+    const basePath = process.env.NODE_ENV === 'production' ? '/find-my-farmers-market' : '';
+    window.location.href = `${basePath}/markets?zip=${searchParams.zip}&radius=${searchParams.radius}`;
   };
 
   return (

@@ -89,6 +89,7 @@ export default function MarketsPage() {
                   <Link
                     href={`/markets/${market.id || index}`}
                     className="text-green-600 hover:text-green-800 font-medium"
+                    prefetch={false}
                   >
                     View Details →
                   </Link>

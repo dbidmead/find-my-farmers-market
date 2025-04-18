@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found | Find my Farmers Market</title>
+  <script>
+    // Single Page App for GitHub Pages 
+    // https://github.com/rafgraph/spa-github-pages
+    
+    // This script takes the current URL and converts the path and query
+    // string into just a query string, and then redirects to the root
+    // with that query string attached
+    var pathSegmentsToKeep = 1; // Keep /find-my-farmers-market/ but not beyond
+    
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      l.pathname.split('/').slice(0, pathSegmentsToKeep + 1).join('/') + '/?p=/' +
+      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+      (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
+  </script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #fafafa;
+      color: #333;
+    }
+    .error-container {
+      text-align: center;
+      max-width: 500px;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 3em;
+      color: #166534;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+    a {
+      display: inline-block;
+      background-color: #166534;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    a:hover {
+      background-color: #125429;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <h1>404</h1>
+    <p>Redirecting to the homepage...</p>
+    <p>If you're not redirected, <a href="/find-my-farmers-market/">click here</a>.</p>
+  </div>
+</body>
+</html> 
