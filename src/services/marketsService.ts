@@ -1,5 +1,10 @@
 import { FarmersMarket, SearchParams, ApiResponse } from '../types';
 
+// The base URL for our proxy server
+const PROXY_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? '/api' // Use relative path in production (assuming same domain)
+  : 'http://localhost:3001/api'; // Use direct URL in development
+
 /**
  * Searches for farmers markets based on location parameters
  */
@@ -7,8 +12,8 @@ export async function searchMarkets(params: SearchParams): Promise<FarmersMarket
   try {
     console.log('Searching with params:', params);
     
-    // Build the URL to our local API endpoint
-    let endpoint = '/api/markets';
+    // Build the URL to our Express proxy server
+    let endpoint = `${PROXY_BASE_URL}/markets`;
     
     // Add query parameters
     const queryParams = new URLSearchParams();
@@ -59,8 +64,8 @@ export async function getMarketDetails(marketId: string): Promise<FarmersMarket 
   try {
     console.log('Getting details for market ID:', marketId);
     
-    // Use our local API endpoint
-    const endpoint = `/api/markets/${marketId}`;
+    // Use our Express proxy endpoint for market details
+    const endpoint = `${PROXY_BASE_URL}/markets/${marketId}`;
 
     console.log('Fetching from endpoint:', endpoint);
     const response = await fetch(endpoint);

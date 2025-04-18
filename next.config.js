@@ -4,6 +4,14 @@ const nextConfig = {
   images: {
     domains: ['maps.googleapis.com'],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/proxy/:path*',
+        destination: 'https://www.usdalocalfoodportal.com/api/:path*',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig; 
