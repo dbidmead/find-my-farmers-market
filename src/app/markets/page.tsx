@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { FarmersMarket } from '../../types';
-import { searchMarkets } from '../../services/marketsService';
 import { getAssetPath } from '../../utils/assetPath';
+import MarketCard from '@/components/MarketCard';
 
 export default function MarketsPage() {
   const searchParams = useSearchParams();
@@ -26,13 +26,48 @@ export default function MarketsPage() {
 
       try {
         setLoading(true);
-        const results = await searchMarkets({ zip, radius });
-        console.log('Markets results:', results);
-        setMarkets(results);
+        
+        // Direct API call
+        const API_BASE_URL = 'https://www.usdalocalfoodportal.com/api';
+        const API_KEY = process.env.NEXT_PUBLIC_USDA_API_KEY || '';
+        const url = `${API_BASE_URL}/farmersmarket/?apikey=${API_KEY}&zip=${zip}&radius=${radius}`;
+        
+        console.log('Making direct API call to USDA API (API key hidden):', 
+          url.replace(API_KEY, '***API_KEY***'));
+        
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'FarmersMarketDirectory/1.0'
+          },
+          credentials: 'omit'
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API responded with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Handle different response formats
+        if (Array.isArray(data)) {
+          setMarkets(data);
+        } else if (data && data.results && Array.isArray(data.results)) {
+          setMarkets(data.results);
+        } else if (data && data.data && Array.isArray(data.data)) {
+          // Handle the {data: Array} format
+          setMarkets(data.data);
+        } else {
+          console.error('Unexpected API response format:', data);
+          setMarkets([]);
+        }
+        
         setError(null);
       } catch (err) {
         console.error('Error fetching markets:', err);
         setError('Failed to fetch farmers markets. Please try again.');
+        setMarkets([]);
       } finally {
         setLoading(false);
       }
@@ -42,64 +77,49 @@ export default function MarketsPage() {
   }, [zip, radius]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-8">
-      <div className="w-full max-w-5xl">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Farmers Markets</h1>
-          <Link 
-            href={getAssetPath("/")}
-            className="bg-green-600 text-white py-2 px-4 rounded-md
-                     hover:bg-green-700 focus:outline-none focus:ring-2
-                     focus:ring-green-500 focus:ring-offset-2"
-          >
-            New Search
+    <div className="markets-page container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">Farmers Markets Near {zip}</h1>
+      
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-4"></div>
+          <p>Loading markets...</p>
+        </div>
+      ) : error ? (
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
+          <p>{error}</p>
+          <Link href={getAssetPath("/")}>
+            <button className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+              Try New Search
+            </button>
           </Link>
         </div>
-
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
-          </div>
-        ) : error ? (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            <p>{error}</p>
-          </div>
-        ) : markets.length === 0 ? (
-          <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
-            <p>No farmers markets found in your area. Try expanding your search radius or searching for a different location.</p>
-          </div>
-        ) : (
+      ) : markets.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="mb-4">No markets found near ZIP code {zip}.</p>
+          <Link href={getAssetPath("/")}>
+            <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+              Try New Search
+            </button>
+          </Link>
+        </div>
+      ) : (
+        <>
+          <p className="mb-6">Found {markets.length} markets within {radius} miles of {zip}</p>
+          
+          <Link href={getAssetPath("/")}>
+            <button className="mb-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
+              New Search
+            </button>
+          </Link>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {markets.map((market, index) => (
-              <div key={market.id || index} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="p-4">
-                  <h2 className="text-xl font-semibold mb-2 text-gray-800">
-                    {market.marketname || market.MarketName || "Farmers Market"}
-                  </h2>
-                  
-                  {market.distance && (
-                    <p className="text-gray-600 mb-2">{market.distance} miles away</p>
-                  )}
-                  
-                  {(market.city || market.City) && (market.state || market.State) && (
-                    <p className="text-gray-600 mb-2">
-                      {market.city || market.City}, {market.state || market.State}
-                    </p>
-                  )}
-                  
-                  <Link
-                    href={getAssetPath(`/markets/${market.id || index}`)}
-                    className="text-green-600 hover:text-green-800 font-medium"
-                    prefetch={false}
-                  >
-                    View Details →
-                  </Link>
-                </div>
-              </div>
+            {markets.map((market: FarmersMarket, index: number) => (
+              <MarketCard key={index} market={market} />
             ))}
           </div>
-        )}
-      </div>
-    </main>
+        </>
+      )}
+    </div>
   );
 } 
