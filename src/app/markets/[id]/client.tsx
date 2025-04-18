@@ -1,17 +1,36 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getMarketDetails } from '../../../services/marketsService';
+import { FarmersMarket } from '@/types';
+
+// Extend Window interface to include marketId property
+declare global {
+  interface Window {
+    marketId?: string;
+  }
+}
 
 // Client component for market details
-export default function ClientMarketDetail({ marketId }: { marketId: string }) {
-  const [market, setMarket] = useState<any | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+export default function ClientMarketDetail({ 
+  marketId, 
+  initialData 
+}: { 
+  marketId: string;
+  initialData?: FarmersMarket | null;
+}) {
+  const [market, setMarket] = useState<any | null>(initialData || null);
+  const [loading, setLoading] = useState<boolean>(!initialData);
   const [error, setError] = useState<string | null>(null);
 
   // Use React's useEffect hook to fetch the market details when the component mounts
   useEffect(() => {
+    // Skip fetching if we already have initial data
+    if (initialData) {
+      return;
+    }
+
     async function fetchMarketDetails() {
       if (!marketId) {
         setError('Market ID is required');
@@ -35,7 +54,7 @@ export default function ClientMarketDetail({ marketId }: { marketId: string }) {
     }
 
     fetchMarketDetails();
-  }, [marketId]);
+  }, [marketId, initialData]);
 
   const handleBack = () => {
     window.history.back();

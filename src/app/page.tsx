@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SearchParams } from '../types';
+import { getAssetPath } from '../utils/assetPath';
 
 export default function Home() {
   const [searchParams, setSearchParams] = useState<SearchParams>({
@@ -21,9 +22,8 @@ export default function Home() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Use full path with basePath for GitHub Pages
-    const basePath = process.env.NODE_ENV === 'production' ? '/find-my-farmers-market' : '';
-    window.location.href = `${basePath}/markets?zip=${searchParams.zip}&radius=${searchParams.radius}`;
+    // Use the getAssetPath utility for consistent path handling
+    window.location.href = `${getAssetPath('/markets')}?zip=${searchParams.zip}&radius=${searchParams.radius}`;
   };
 
   return (
@@ -33,7 +33,7 @@ export default function Home() {
         {/* Background Image - Artisan Sourdough Bread */}
         <div className="absolute inset-0">
           <Image 
-            src="/images/artisan-sourdough-hero.jpg" 
+            src={getAssetPath("/images/artisan-sourdough-hero.jpg")}
             alt="Rustic artisan sourdough bread"
             fill
             priority
@@ -193,7 +193,7 @@ export default function Home() {
             <div className="card overflow-hidden hover:shadow-lg transition-shadow">
               <div className="h-48 relative">
                 <Image
-                  src="/images/farmers-market.jpg"
+                  src={getAssetPath("/images/farmers-market.jpg")}
                   alt="Western farmers market with beautiful produce"
                   fill
                   className="object-cover"
@@ -213,7 +213,7 @@ export default function Home() {
             <div className="card overflow-hidden hover:shadow-lg transition-shadow">
               <div className="h-48 relative">
                 <Image
-                  src="/images/organic-produce.jpg"
+                  src={getAssetPath("/images/organic-produce.jpg")}
                   alt="Midwest farmers market with colorful fresh vegetables"
                   fill
                   className="object-cover"
@@ -233,7 +233,7 @@ export default function Home() {
             <div className="card overflow-hidden hover:shadow-lg transition-shadow">
               <div className="h-48 relative">
                 <Image
-                  src="/images/southern-produce.jpg"
+                  src={getAssetPath("/images/southern-produce.jpg")}
                   alt="Southern farmers market with regional specialties"
                   fill
                   className="object-cover"
@@ -253,7 +253,7 @@ export default function Home() {
             <div className="card overflow-hidden hover:shadow-lg transition-shadow">
               <div className="h-48 relative">
                 <Image
-                  src="/images/farmers-market-2.jpg"
+                  src={getAssetPath("/images/farmers-market-2.jpg")}
                   alt="Eastern farmers market with seasonal produce"
                   fill
                   className="object-cover"
@@ -273,7 +273,7 @@ export default function Home() {
           
           <div className="text-center mt-12">
             <Link 
-              href="/markets" 
+              href={getAssetPath("/markets")} 
               className="inline-flex items-center py-3 px-6 bg-white text-primary border border-primary
                         hover:bg-primary hover:text-white rounded-lg transition-colors shadow-sm font-medium"
             >
@@ -320,7 +320,7 @@ export default function Home() {
               <div className="md:w-1/2 order-1 md:order-2">
                 <div className="relative rounded-lg overflow-hidden shadow-xl">
                   <Image 
-                    src="/images/crop-field.jpg" 
+                    src={getAssetPath("/images/crop-field.jpg")} 
                     alt="Scenic view of a local crop field at sunset"
                     width={600}
                     height={400}
@@ -344,7 +344,7 @@ export default function Home() {
             the vibrant atmosphere that makes these community institutions so special.
           </p>
           <Link 
-            href="/markets" 
+            href={getAssetPath("/markets")} 
             className="inline-flex items-center py-3 px-8 bg-primary text-white
                      hover:bg-primary-light rounded-lg transition-colors shadow-md font-medium text-lg"
           >

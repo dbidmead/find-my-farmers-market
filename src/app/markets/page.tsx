@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { FarmersMarket } from '../../types';
 import { searchMarkets } from '../../services/marketsService';
+import { getAssetPath } from '../../utils/assetPath';
 
 export default function MarketsPage() {
   const searchParams = useSearchParams();
@@ -12,8 +13,8 @@ export default function MarketsPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const zip = searchParams.get('zip');
-  const radius = searchParams.get('radius') ? parseInt(searchParams.get('radius') || '20') : 20;
+  const zip = searchParams?.get('zip') || '';
+  const radius = searchParams?.get('radius') ? parseInt(searchParams?.get('radius') || '20') : 20;
 
   useEffect(() => {
     async function fetchMarkets() {
@@ -46,7 +47,7 @@ export default function MarketsPage() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Farmers Markets</h1>
           <Link 
-            href="/"
+            href={getAssetPath("/")}
             className="bg-green-600 text-white py-2 px-4 rounded-md
                      hover:bg-green-700 focus:outline-none focus:ring-2
                      focus:ring-green-500 focus:ring-offset-2"
@@ -87,7 +88,7 @@ export default function MarketsPage() {
                   )}
                   
                   <Link
-                    href={`/markets/${market.id || index}`}
+                    href={getAssetPath(`/markets/${market.id || index}`)}
                     className="text-green-600 hover:text-green-800 font-medium"
                     prefetch={false}
                   >

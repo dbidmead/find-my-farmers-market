@@ -1,5 +1,6 @@
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
+import { getAssetPath } from "../utils/assetPath";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const montserrat = Montserrat({ subsets: ["latin"], variable: '--font-montserrat' });
@@ -18,19 +19,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/farm-basket-logo.svg" />
+        <link rel="icon" href={getAssetPath("/farm-basket-logo.svg")} />
       </head>
       <body className={`${inter.variable} ${montserrat.variable} font-sans bg-stone-50 min-h-screen`}>
         <header className="bg-gradient-to-r from-accent-greens via-accent-greens/60 to-transparent text-white shadow-lg">
           <div className="container mx-auto flex justify-between items-center py-4 px-4 md:px-8">
-            <a href="/" className="text-xl md:text-2xl font-bold text-white font-montserrat flex items-center">
-              <img src="/farm-basket-logo.svg" alt="Farmers Market Basket" className="h-8 md:h-10 mr-2" />
+            <a href={getAssetPath("/")} className="text-xl md:text-2xl font-bold text-white font-montserrat flex items-center">
+              <img src={getAssetPath("/farm-basket-logo.svg")} alt="Farmers Market Basket" className="h-8 md:h-10 mr-2" />
               <span className="text-amber-200 mr-1">Find my</span> Farmers Market
             </a>
             <nav>
               <ul className="flex space-x-6">
-                <li><a href="/" className="text-accent-greens font-medium hover:font-bold transition-all duration-200 py-1 border-b-2 border-transparent hover:border-accent-greens">Home</a></li>
-                <li><a href="/markets" className="text-accent-greens font-medium hover:font-bold transition-all duration-200 py-1 border-b-2 border-transparent hover:border-accent-greens">Markets</a></li>
+                <li><a href={getAssetPath("/")} className="text-accent-greens font-medium hover:font-bold transition-all duration-200 py-1 border-b-2 border-transparent hover:border-accent-greens">Home</a></li>
+                <li><a href={getAssetPath("/markets")} className="text-accent-greens font-medium hover:font-bold transition-all duration-200 py-1 border-b-2 border-transparent hover:border-accent-greens">Markets</a></li>
               </ul>
             </nav>
           </div>

@@ -2,15 +2,17 @@
   "name": "farmers-market-directory",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://dbidmead.github.io/find-my-farmers-market/",
+  "homepage": "https://dbidmead.github.io/farmers-market-directory/",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "npm run clean:dev && NODE_ENV=development next dev -p 3000",
+    "build": "NODE_ENV=production next build && npm run copy-images",
     "start": "next start",
     "lint": "next lint",
+    "clean": "rm -rf .next out node_modules/.cache",
+    "clean:dev": "rm -rf .next node_modules/.cache",
+    "copy-images": "node scripts/copy-images.js",
     "proxy": "nodemon server/server.js",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d out"
+    "deploy": "node deploy-gh-pages.js"
   },
   "dependencies": {
     "@types/cors": "^2.8.17",

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { getAssetPath } from '../utils/assetPath';
 
 export default function NotFound() {
   return (
@@ -11,9 +12,9 @@ export default function NotFound() {
         <p className="text-gray-600 mb-8">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        <Link
-          href="/"
-          className="inline-block bg-accent-greens text-white py-2 px-6 rounded-md
+        <Link 
+          href={getAssetPath("/")}
+          className="inline-block bg-green-600 text-white py-2 px-6 rounded-md
                    hover:bg-green-700 transition-colors"
         >
           Go back home
