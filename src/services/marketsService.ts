@@ -6,6 +6,12 @@ import { fetchMarkets, fetchMarketById } from '../lib/api';
  */
 export async function searchMarkets(params: SearchParams): Promise<FarmersMarket[]> {
   try {
+    // In static export production mode, return empty results to avoid API calls
+    if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
+      console.log('Static export mode - skipping API call for market search');
+      return [];
+    }
+    
     console.log('Searching with params:', params);
     
     // Convert params to format expected by the API
@@ -37,7 +43,7 @@ export async function searchMarkets(params: SearchParams): Promise<FarmersMarket
     }
   } catch (error) {
     console.error('Error searching markets:', error);
-    throw error;
+    return []; // Return empty array rather than throwing to increase resilience
   }
 }
 
@@ -46,6 +52,12 @@ export async function searchMarkets(params: SearchParams): Promise<FarmersMarket
  */
 export async function getMarketDetails(marketId: string): Promise<FarmersMarket | null> {
   try {
+    // In static export production mode, return null to avoid API calls
+    if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
+      console.log('Static export mode - skipping API call for market details');
+      return null;
+    }
+    
     console.log('Getting details for market ID:', marketId);
     
     // Use our direct API client
@@ -55,6 +67,6 @@ export async function getMarketDetails(marketId: string): Promise<FarmersMarket 
     return data || null;
   } catch (error) {
     console.error('Error getting market details:', error);
-    throw error;
+    return null; // Return null rather than throwing to increase resilience
   }
 } 

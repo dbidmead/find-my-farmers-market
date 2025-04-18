@@ -11,7 +11,7 @@
 export function getAssetPath(path: string): string {
   // Only add the base path in production
   const basePath = process.env.NODE_ENV === 'production' 
-    ? (process.env.NEXT_PUBLIC_BASE_PATH || '') 
+    ? '/farmers-market-directory' 
     : '';
   
   // Ensure path starts with a slash

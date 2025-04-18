@@ -304,7 +304,7 @@ export default function Home() {
                   </p>
                   
                   <p>
-                    At farmers markets, you'll find a wide variety of fresh fruits and vegetables, often harvested 
+                    At farmers markets, you&apos;ll find a wide variety of fresh fruits and vegetables, often harvested 
                     within 24 hours of the market. Beyond produce, many markets feature vendors selling meats, eggs, 
                     dairy products, baked goods, honey, jams, flowers, and handcrafted items.
                   </p>

@@ -1,0 +1,14 @@
+/* 
+ * Main CSS file to ensure Tailwind styles are applied in production
+ * This file forces CSS to be included in the build
+ */
+
+/* Import Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Force CSS inclusion */
+.css-force-include {
+  display: none;
+} 
