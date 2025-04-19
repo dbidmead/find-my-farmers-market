@@ -88,30 +88,30 @@ export default function MarketsPage() {
       ) : error ? (
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
           <p>{error}</p>
-          <Link href={getAssetPath("/")}>
+          <a href="/">
             <button className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
               Try New Search
             </button>
-          </Link>
+          </a>
         </div>
       ) : markets.length === 0 ? (
         <div className="text-center py-12">
           <p className="mb-4">No markets found near ZIP code {zip}.</p>
-          <Link href={getAssetPath("/")}>
+          <a href="/">
             <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
               Try New Search
             </button>
-          </Link>
+          </a>
         </div>
       ) : (
         <>
           <p className="mb-6">Found {markets.length} markets within {radius} miles of {zip}</p>
           
-          <Link href={getAssetPath("/")}>
+          <a href="/">
             <button className="mb-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
               New Search
             </button>
-          </Link>
+          </a>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {markets.map((market: FarmersMarket, index: number) => (

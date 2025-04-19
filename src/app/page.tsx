@@ -199,7 +199,7 @@ export default function Home() {
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary-dark/70 flex items-end justify-center p-4">
-                  <span className="text-white text-3xl font-montserrat font-semibold">West</span>
+                  <span className="text-amber-100 text-3xl font-montserrat font-semibold drop-shadow-md">West</span>
                 </div>
               </div>
               <div className="p-4">
@@ -219,7 +219,7 @@ export default function Home() {
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-accent-greens/70 flex items-end justify-center p-4">
-                  <span className="text-white text-3xl font-montserrat font-semibold">Midwest</span>
+                  <span className="text-amber-100 text-3xl font-montserrat font-semibold drop-shadow-md">Midwest</span>
                 </div>
               </div>
               <div className="p-4">
@@ -239,7 +239,7 @@ export default function Home() {
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-accent-carrot/70 flex items-end justify-center p-4">
-                  <span className="text-white text-3xl font-montserrat font-semibold">South</span>
+                  <span className="text-amber-100 text-3xl font-montserrat font-semibold drop-shadow-md">South</span>
                 </div>
               </div>
               <div className="p-4">
@@ -259,7 +259,7 @@ export default function Home() {
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-accent-tomato/70 flex items-end justify-center p-4">
-                  <span className="text-white text-3xl font-montserrat font-semibold">East</span>
+                  <span className="text-amber-100 text-3xl font-montserrat font-semibold drop-shadow-md">East</span>
                 </div>
               </div>
               <div className="p-4">

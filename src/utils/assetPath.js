@@ -5,31 +5,44 @@ export function getAssetPath(path) {
   // Log the initial path
   console.log('getAssetPath js input:', path);
   
-  // Check for duplicate paths early
-  const repeatedPath = path.match(/\/find-my-farmers-market\//g);
-  if (repeatedPath && repeatedPath.length > 0) {
-    console.error(`Input path already contains ${repeatedPath.length} repetitions of /find-my-farmers-market/`);
-    console.error('Input path:', path);
-  }
-
-  const basePath = process.env.NODE_ENV === 'production' ? '/find-my-farmers-market' : '';
+  const basePath = '/find-my-farmers-market';
+  const isProd = process.env.NODE_ENV === 'production';
   
   // If we're not in production, just clean the path
-  if (!basePath) {
-    return path.startsWith('/') ? path : `/${path}`;
+  if (!isProd) {
+    const result = path.startsWith('/') ? path : `/${path}`;
+    console.log('DEV mode - returning:', result);
+    return result;
   }
   
-  // Check if the path already contains the basePath anywhere
-  if (path.includes(basePath) || path.includes(basePath.slice(1))) {
-    // Already has the base path, return the path as is
-    return path.startsWith('/') ? path : `/${path}`;
+  // Ensure path is clean
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  console.log('Cleaned path:', cleanPath);
+  
+  // More thorough check for duplicate paths:
+  // 1. Check if it starts with the basePath exactly
+  const startsWithBase = cleanPath.startsWith(basePath);
+  // 2. Check for any occurrences of the basePath in the middle of the path
+  const hasBaseInMiddle = cleanPath.includes(`${basePath}/`);
+  // 3. Check if it exactly equals the basePath
+  const equalsBase = cleanPath === basePath;
+  
+  console.log('Path checks:', { 
+    startsWithBase, 
+    hasBaseInMiddle, 
+    equalsBase,
+    cleanPath, 
+    basePath 
+  });
+  
+  if (startsWithBase || hasBaseInMiddle || equalsBase) {
+    // Log that we're preventing duplication
+    console.log('Path already contains basePath, returning as-is:', cleanPath);
+    return cleanPath;
   }
   
-  // Remove any leading slash to avoid double slashes
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  
-  // Ensure no double slashes when concatenating
-  const finalPath = `${basePath}/${cleanPath}`;
+  // Add base path in production
+  const finalPath = `${basePath}${cleanPath}`;
   console.log('getAssetPath js output:', finalPath);
   return finalPath;
 }
@@ -41,15 +54,32 @@ export function getStaticPath(path) {
   const isProduction = process.env.NODE_ENV === 'production';
   const basePath = isProduction ? '/find-my-farmers-market' : '';
   
+  // If not in production, just return the path
+  if (!isProduction) {
+    return path;
+  }
+  
   // For Next.js chunks and assets, ensure they have the correct path
   if (path.startsWith('/_next/')) {
+    // Check if path already includes basePath
+    if (path.startsWith(`${basePath}/_next/`)) {
+      return path;
+    }
     return `${basePath}${path}`;
   }
   
-  // Remove any leading slash to avoid double slashes
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  // Ensure path is clean
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
   
-  return `${basePath}/${cleanPath}`;
+  // Check for existing basePath
+  if (cleanPath.startsWith(basePath) || 
+     cleanPath.includes(`${basePath}/`) || 
+     cleanPath === basePath) {
+    return cleanPath;
+  }
+  
+  // Add basePath
+  return `${basePath}${cleanPath}`;
 }
 
 /**

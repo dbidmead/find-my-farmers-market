@@ -12,13 +12,13 @@ export default function NotFound() {
         <p className="text-gray-600 mb-8">
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
-        <Link 
-          href={getAssetPath("/")}
+        <a 
+          href="/"
           className="inline-block bg-green-600 text-white py-2 px-6 rounded-md
                    hover:bg-green-700 transition-colors"
         >
           Go back home
-        </Link>
+        </a>
       </div>
     </div>
   );

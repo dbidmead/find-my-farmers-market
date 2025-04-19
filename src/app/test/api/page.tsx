@@ -3,18 +3,17 @@
 import React from 'react';
 import ApiTest from '@/components/ApiTest';
 import { getAssetPath } from '@/utils/assetPath';
-import Link from 'next/link';
 
 export default function ApiTestPage() {
   return (
     <div className="p-8">
       <div className="mb-4">
-        <Link 
-          href={getAssetPath("/")}
-          className="text-green-600 hover:underline"
+        <a 
+          href="/"
+          className="inline-flex items-center text-green-600 hover:text-green-800 mb-6"
         >
-          ← Back to Home
-        </Link>
+          Back to Home
+        </a>
       </div>
       
       <h1 className="text-2xl font-bold mb-6">API Testing Page</h1>

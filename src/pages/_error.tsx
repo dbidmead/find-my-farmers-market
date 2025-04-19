@@ -16,9 +16,9 @@ function Error({ statusCode }: { statusCode?: number }) {
             ? `An error ${statusCode} occurred on the server`
             : 'An error occurred on the client'}
         </p>
-        <Link href={getAssetPath("/")} className="inline-block bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700">
+        <a href="/" className="inline-block bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700">
           Go back home
-        </Link>
+        </a>
       </div>
     </div>
   );

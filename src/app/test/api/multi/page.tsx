@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { getAssetPath } from '@/utils/assetPath';
-import Link from 'next/link';
 
 // Sample ZIP codes that likely have farmers markets
 const SAMPLE_ZIP_CODES = [
@@ -125,12 +124,12 @@ export default function ApiMultiTestPage() {
   return (
     <div className="p-8">
       <div className="mb-4">
-        <Link 
-          href={getAssetPath("/")}
+        <a 
+          href="/"
           className="text-green-600 hover:underline"
         >
           ← Back to Home
-        </Link>
+        </a>
       </div>
       
       <h1 className="text-2xl font-bold mb-6">API Multi-Format Testing Page</h1>

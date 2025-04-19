@@ -16,17 +16,20 @@ export function getAssetPath(path: string): string {
     return path.startsWith('/') ? path : `/${path}`;
   }
   
-  // Check if the path already contains the basePath anywhere
-  if (path.includes(basePath) || path.includes(basePath.slice(1))) {
-    // Already has the base path, return the path as is
-    return path.startsWith('/') ? path : `/${path}`;
+  // Ensure path is clean
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  
+  // More thorough check for duplicate paths:
+  // 1. Check if it starts with the basePath exactly
+  // 2. Check for any occurrences of the basePath in the middle of the path
+  if (cleanPath.startsWith(basePath) || 
+     cleanPath.includes(`${basePath}/`) || 
+     cleanPath === basePath) {
+    return cleanPath;
   }
   
-  // Ensure path starts with a slash
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  
-  // Add the base path
-  return `${basePath}${normalizedPath}`;
+  // Add base path in production
+  return `${basePath}${cleanPath}`;
 }
 
 /**
